@@ -17,6 +17,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
+
+/*
+토큰 생성 & 올바른 토큰인지 유효성 검사
+토큰에서 필요한 정보 가져오는 클래스
+ */
 @RequiredArgsConstructor
 @Service
 public class TokenProvider {
