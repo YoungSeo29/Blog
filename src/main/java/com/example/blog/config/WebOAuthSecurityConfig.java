@@ -63,7 +63,7 @@ public class WebOAuthSecurityConfig {
                 // JWT 필터를 시큐리티 필터 체인 앞에 등록
                 .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 // 인증, 인가 설정
-                .authorizeRequests(auth -> auth
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/api/token")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated().anyRequest().permitAll())
                 // Oauth2 로그인 설정
