@@ -4,6 +4,7 @@ import com.example.blog.config.jwt.TokenProvider;
 import com.example.blog.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.example.blog.config.oauth.OAuth2SuccessHandler;
 import com.example.blog.config.oauth.OAuth2UserCustomService;
+import com.example.blog.repository.RefreshTokenRepository;
 import com.example.blog.service.RefreshTokenService;
 import com.example.blog.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class WebOAuthSecurityConfig {
 
     private final OAuth2UserCustomService oAuth2UserCustomService;
     private final TokenProvider tokenProvider;
-    private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final UserService userService;
 
     // 스프링 시큐리티 기능 비활성화
@@ -87,7 +88,7 @@ public class WebOAuthSecurityConfig {
     // Oauth2 로그인 성공 이후 할 작업을 정의하는 핸들러 등록
     @Bean
     public OAuth2SuccessHandler oAuth2SuccessHandler() {
-        return new Oauth2SuccessHandler(
+        return new OAuth2SuccessHandler(
                 tokenProvider,
                 refreshTokenRepository,
                 oAuth2AuthorizationRequestBasedOnCookieRepository(),
