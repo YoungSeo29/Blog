@@ -7,6 +7,7 @@ import com.example.blog.dto.UpdateArticleRequestDto;
 import com.example.blog.repository.BlogRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +32,10 @@ public class BlogService {
     }
 
     public void delete(Long id) {
+        Article article = blogRepository.findById(id)
+                        .orElseThrow( () -> new IllegalArgumentException("not found : " + id));
+
+        authorizeArticleAuthor(article);
         blogRepository.deleteById(id);
     }
 
@@ -39,8 +44,18 @@ public class BlogService {
         Article article = blogRepository.findById(id)
                 .orElseThrow( () -> new IllegalArgumentException("not found : " + id));
 
+        authorizeArticleAuthor(article);
         article.update(requestDto.getTitle(), requestDto.getContent());
 
         return article;
+    }
+
+    // 게시글 작성한 유저인지 확인하는 메서드
+    private static void authorizeArticleAuthor(Article article) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if(!article.getAuthor().equals(username)) {
+            throw new IllegalArgumentException("not authorized");
+        }
     }
 }
