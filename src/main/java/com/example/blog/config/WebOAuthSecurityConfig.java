@@ -68,8 +68,10 @@ public class WebOAuthSecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated().anyRequest().permitAll())
                 // Oauth2 로그인 설정
                 .oauth2Login(oauth2 -> oauth2.loginPage("/login")
+                        // Authorization 요청과 관련된 상태 저장
                         .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint.authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository()))
                         .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(oAuth2UserCustomService))
+                        // 인증 성공시 실행할 핸들러
                         .successHandler(oAuth2SuccessHandler())
                 )
                 // 인증 실패 시 에러 처리 방식 결정
