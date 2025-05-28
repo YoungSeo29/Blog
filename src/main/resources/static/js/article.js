@@ -3,6 +3,7 @@ const deleteButton = document.getElementById('delete-btn');
 if (deleteButton) {
     deleteButton.addEventListener('click', event => {
         let id = document.getElementById('article-id').value;
+
         function success() {
             alert('삭제가 완료되었습니다.');
             location.replace('/articles');
@@ -13,7 +14,7 @@ if (deleteButton) {
             location.replace('/articles');
         }
 
-        httpRequest('DELETE',`/api/articles/${id}`, null, success, fail);
+        httpRequest('DELETE', `/api/articles/${id}`, null, success, fail);
     });
 }
 
@@ -39,7 +40,7 @@ if (modifyButton) {
             location.replace(`/articles/${id}`);
         }
 
-        httpRequest('PUT',`/api/articles/${id}`, body, success, fail);
+        httpRequest('PUT', `/api/articles/${id}`, body, success, fail);
     });
 }
 
@@ -52,16 +53,44 @@ if (createButton) {
             title: document.getElementById('title').value,
             content: document.getElementById('content').value
         });
+
         function success() {
             alert('등록 완료되었습니다.');
             location.replace('/articles');
         };
+
         function fail() {
             alert('등록 실패했습니다.');
             location.replace('/articles');
         };
 
-        httpRequest('POST','/api/articles', body, success, fail)
+        httpRequest('POST', '/api/articles', body, success, fail)
+    });
+}
+
+// 로그아웃 기능
+const logoutButton = document.getElementById('logout-btn');
+
+if (logoutButton) {
+
+    logoutButton.addEventListener('click', event => {
+
+        function success() {
+
+            // 로컬 스토리지에 저장된 엑세스 토큰 삭제
+            localStorage.removeItem('access_token');
+
+            // 쿠키에 저장된 리프레시 토큰 삭제
+            deleteCookie('refresh_token');
+            location.replace('/login');
+        }
+
+        function fail() {
+            alert('로그아웃에 실패했습니다.');
+        }
+
+        httpRequest('DELETE', '/api/refresh-token', null, success, fail);
+
     });
 }
 
@@ -81,6 +110,11 @@ function getCookie(key) {
     });
 
     return result;
+}
+
+// 쿠키를 삭제하는 함수
+function deleteCookie(name) {
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
 
 // HTTP 요청을 보내는 함수
