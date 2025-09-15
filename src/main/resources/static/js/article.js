@@ -68,6 +68,27 @@ if (createButton) {
     });
 }
 
+// 마이페이지 이동 버튼
+const myPageButton = document.getElementById('myPage-btn');
+if (myPageButton) {
+    myPageButton.addEventListener('click', event => {
+
+        // 인증 통과 -> 실제 페이지로 이동
+        function success() {
+            location.href = '/my-page';
+        }
+
+        // 실패
+        function fail() {
+            alert("로그인이 필요합니다.");
+            location.href = '/login';
+        }
+
+        // /my-page를 먼저 요청해서 인증된 사용자 확인
+        httpRequest('GET', '/my-page', null, success, fail);
+    });
+}
+
 // 로그아웃 기능
 const logoutButton = document.getElementById('logout-btn');
 
