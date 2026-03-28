@@ -100,6 +100,7 @@ if (logoutButton) {
             // 로컬 스토리지에 저장된 엑세스 토큰 삭제
             localStorage.removeItem('access_token');
 
+            deleteCookie('access_token'); // 이거 추가
             // 쿠키에 저장된 리프레시 토큰 삭제
             deleteCookie('refresh_token');
             location.replace('/login');
@@ -134,7 +135,7 @@ function getCookie(key) {
 
 // 쿠키를 삭제하는 함수
 function deleteCookie(name) {
-    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;';
 }
 
 // HTTP 요청을 보내는 함수
@@ -142,7 +143,6 @@ function httpRequest(method, url, body, success, fail) {
     fetch(url, {
         method: method,
         headers: { // 로컬 스토리지에서 액세스 토큰 값을 가져와 헤더에 추가
-            Authorization: 'Bearer ' + localStorage.getItem('access_token'),
             'Content-Type': 'application/json',
         },
         body: body,
@@ -168,7 +168,7 @@ function httpRequest(method, url, body, success, fail) {
                     }
                 })
                 .then(result => { // 재발급이 성공하면 로컬 스토리지값을 새로운 액세스 토큰으로 교체
-                    localStorage.setItem('access_token', result.accessToken);
+                    document.cookie = 'access_token=' + result.accessToken + '; path=/; max-age=7200';
                     httpRequest(method, url, body, success, fail);
                 })
                 .catch(error => fail());

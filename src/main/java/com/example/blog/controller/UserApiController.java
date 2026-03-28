@@ -5,6 +5,7 @@ import com.example.blog.domain.User;
 import com.example.blog.dto.AddUserRequestDto;
 import com.example.blog.dto.CreateAccessTokenResponseDto;
 import com.example.blog.service.UserService;
+import com.example.blog.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,8 @@ public class UserApiController {
 
         String accessToken = tokenProvider.generateToken(
                 (User) authentication.getPrincipal(), Duration.ofHours(2));
+
+        CookieUtil.addCookie(response, "access_token", accessToken, (int) Duration.ofHours(2).toSeconds());
 
         System.out.println("로그인 함수 실행");
         return ResponseEntity.ok(new CreateAccessTokenResponseDto(accessToken));

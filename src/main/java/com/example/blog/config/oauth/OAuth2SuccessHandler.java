@@ -32,28 +32,37 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
     private final UserService userService;
 
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+
+        System.out.println("### OAuth2SuccessHandler 진입!!!");
 
         // 인증된 유저 객체 추출.
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         // 우리 DB의 사용자 조회
         User user = userService.findByEmail((String) oAuth2User.getAttributes().get("email"));
+        System.out.println("### 유저 이메일: " + user.getEmail());  // 추가
 
         // 리프레시 토큰 생성 -> 저장 -> 쿠키에 저장
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
         saveRefreshToken(user.getId(), refreshToken);
         addRefreshTokenToCookie(request, response, refreshToken);
+        System.out.println("### refresh_token 쿠키 추가 완료");  // 추가
 
         // 엑세스 토큰 생성 -> path 에 엑세스 토큰 추가
         String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
-        String targetUrl = getTargetUrl(accessToken, request);
+//        String targetUrl = getTargetUrl(accessToken, request);
+
+        CookieUtil.addCookie(response, "access_token", accessToken, (int) ACCESS_TOKEN_DURATION.toSeconds());
+        System.out.println("### access_token 쿠키 추가 완료");  // 추가
 
         // 인증 관련 설정값, 쿠키 제거
         clearAuthenticationAttributes(request, response);
 
         // 리다이렉트
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        getRedirectStrategy().sendRedirect(request, response, REDIRECT_PATH);
     }
 
 
@@ -79,12 +88,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         authorizationRequestRepository.removeAuthorizationRequestCookie(request, response);
     }
 
-    private String getTargetUrl(String token, HttpServletRequest request) {
-        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-
-         return UriComponentsBuilder.fromUriString(baseUrl + REDIRECT_PATH)
-                 .queryParam("token", token)
-                 .build()
-                 .toUriString();
-    }
+//    private String getTargetUrl(String token, HttpServletRequest request) {
+//        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+//
+//         return UriComponentsBuilder.fromUriString(baseUrl + REDIRECT_PATH)
+//                 .queryParam("token", token)
+//                 .build()
+//                 .toUriString();
+//    }
 }

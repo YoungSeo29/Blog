@@ -10,8 +10,7 @@ async function login() {
 
     if (res.ok) {
         const data = await res.json();
-        localStorage.setItem('access_token', data.accessToken);
-        location.href = '/articles?token=' + data.accessToken;
+        location.href = '/articles';
     } else {
         alert('로그인 실패. 이메일/비밀번호를 확인해주세요.');
     }
