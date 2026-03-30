@@ -68,7 +68,11 @@ public class BlogViewController {
         System.out.println(userName);
 
         User user = userService.findByEmail(userName);
-        System.out.println(user.getId());
+        model.addAttribute("user", user);
+        // 아래는 임시
+        model.addAttribute("articles", List.of());
+        model.addAttribute("currentPage", 0);
+        model.addAttribute("totalPages", 1);
 
 
         return "myPage";

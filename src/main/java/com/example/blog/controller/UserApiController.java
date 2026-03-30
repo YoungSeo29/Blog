@@ -44,21 +44,37 @@ public class UserApiController {
         return "redirect:/login";
     }
 
-    @PostMapping("/api/login")
-    public ResponseEntity<CreateAccessTokenResponseDto> login(
-            @RequestBody AddUserRequestDto request,
-            HttpServletResponse response) {
+//    @PostMapping("/api/login")
+//    public ResponseEntity<CreateAccessTokenResponseDto> login(
+//            @RequestBody AddUserRequestDto request,
+//            HttpServletResponse response) {
+//
+//        UsernamePasswordAuthenticationToken authToken =
+//                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
+//        Authentication authentication = authenticationManager.authenticate(authToken);
+//
+//        String accessToken = tokenProvider.generateToken(
+//                (User) authentication.getPrincipal(), Duration.ofHours(2));
+//
+//        CookieUtil.addCookie(response, "access_token", accessToken, (int) Duration.ofHours(2).toSeconds());
+//
+//        System.out.println("로그인 함수 실행");
+//        return ResponseEntity.ok(new CreateAccessTokenResponseDto(accessToken));
+//    }
+@PostMapping("/api/login")
+public ResponseEntity<Void> login(
+        @RequestBody AddUserRequestDto request,
+        HttpServletResponse response) {
 
-        UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
-        Authentication authentication = authenticationManager.authenticate(authToken);
+    UsernamePasswordAuthenticationToken authToken =
+            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
+    Authentication authentication = authenticationManager.authenticate(authToken);
 
-        String accessToken = tokenProvider.generateToken(
-                (User) authentication.getPrincipal(), Duration.ofHours(2));
+    String accessToken = tokenProvider.generateToken(
+            (User) authentication.getPrincipal(), Duration.ofHours(2));
 
-        CookieUtil.addCookie(response, "access_token", accessToken, (int) Duration.ofHours(2).toSeconds());
+    CookieUtil.addCookie(response, "access_token", accessToken, (int) Duration.ofHours(2).toSeconds());
 
-        System.out.println("로그인 함수 실행");
-        return ResponseEntity.ok(new CreateAccessTokenResponseDto(accessToken));
-    }
+    return ResponseEntity.ok().build();
+}
 }

@@ -52,7 +52,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // 엑세스 토큰 생성 -> path 에 엑세스 토큰 추가
         String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
-//        String targetUrl = getTargetUrl(accessToken, request);
 
         CookieUtil.addCookie(response, "access_token", accessToken, (int) ACCESS_TOKEN_DURATION.toSeconds());
         System.out.println("### access_token 쿠키 추가 완료");  // 추가

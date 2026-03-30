@@ -78,7 +78,7 @@ public class WebSecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth   // 특정 경로에 대한 액세스 설정.
                         .requestMatchers(
-                                "/login", "/signup", "/user",  // 페이지
+                                "/login", "/signup", "/user", // 페이지
                                 "/api/login", "/api/token",    // 인증 API
                                 "/img/**", "/css/**", "/js/**" // 정적 리소스
                         ).permitAll()

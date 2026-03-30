@@ -49,11 +49,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String token = getAccessToken(authorizationHeader);
 
         if (token == null) {
-            token = request.getParameter("token");
-        }
-
-        if (token == null) {
-            token = getTokenFromCookie(request);
+            token = getTokenFromCookie(request);  // 쿠키에서만 읽기
         }
 
         if(tokenProvider.validToken(token)) {

@@ -32,11 +32,15 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "profile_image")
+    private String profileImage;
+
     @Builder
-    public User(String email, String password, String nickname) {
+    public User(String email, String password, String nickname, String profileImage) {
     this.email = email;
     this.password = password;
     this.nickname = nickname;
+    this.profileImage = profileImage;
     }
 
     @Override

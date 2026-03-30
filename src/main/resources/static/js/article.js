@@ -72,18 +72,13 @@ const myPageButton = document.getElementById('myPage-btn');
 
 if (myPageButton) {
     myPageButton.addEventListener('click', event => {
-
-        function success() {
-            location.href = '/my-page'; // 인증 통과 시 실제 페이지로 이동
-        }
-
-        function fail() {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            location.href = '/my-page';
+        } else {
             alert("로그인이 필요합니다.");
             location.replace('/login');
         }
-
-        // /my-page를 먼저 요청해서 인증된 사용자 확인
-        httpRequest('GET', '/my-page', null, success, fail);
     });
 }
 
@@ -139,10 +134,48 @@ function deleteCookie(name) {
 }
 
 // HTTP 요청을 보내는 함수
+// function httpRequest(method, url, body, success, fail) {
+//     fetch(url, {
+//         method: method,
+//         headers: { // 로컬 스토리지에서 액세스 토큰 값을 가져와 헤더에 추가
+//             'Content-Type': 'application/json',
+//         },
+//         body: body,
+//     }).then(response => {
+//         if (response.status === 200 || response.status === 201) {
+//             return success();
+//         }
+//         const refresh_token = getCookie('refresh_token');
+//         if (response.status === 401 && refresh_token) {
+//             fetch('/api/token', {
+//                 method: 'POST',
+//                 headers: {
+//                     Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify({
+//                     refreshToken: getCookie('refresh_token'),
+//                 }),
+//             })
+//                 .then(res => {
+//                     if (res.ok) {
+//                         return res.json();
+//                     }
+//                 })
+//                 .then(result => { // 재발급이 성공하면 로컬 스토리지값을 새로운 액세스 토큰으로 교체
+//                     document.cookie = 'access_token=' + result.accessToken + '; path=/; max-age=7200';
+//                     httpRequest(method, url, body, success, fail);
+//                 })
+//                 .catch(error => fail());
+//         } else {
+//             return fail();
+//         }
+//     });
+// }
 function httpRequest(method, url, body, success, fail) {
     fetch(url, {
         method: method,
-        headers: { // 로컬 스토리지에서 액세스 토큰 값을 가져와 헤더에 추가
+        headers: {
             'Content-Type': 'application/json',
         },
         body: body,
@@ -154,24 +187,16 @@ function httpRequest(method, url, body, success, fail) {
         if (response.status === 401 && refresh_token) {
             fetch('/api/token', {
                 method: 'POST',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('access_token'),
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    refreshToken: getCookie('refresh_token'),
-                }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ refreshToken: refresh_token }),
             })
                 .then(res => {
                     if (res.ok) {
-                        return res.json();
+                        // ✅ 서버가 쿠키 갱신, 그냥 재시도
+                        httpRequest(method, url, body, success, fail);
                     }
                 })
-                .then(result => { // 재발급이 성공하면 로컬 스토리지값을 새로운 액세스 토큰으로 교체
-                    document.cookie = 'access_token=' + result.accessToken + '; path=/; max-age=7200';
-                    httpRequest(method, url, body, success, fail);
-                })
-                .catch(error => fail());
+                .catch(() => fail());
         } else {
             return fail();
         }
