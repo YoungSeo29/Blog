@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
@@ -40,7 +39,10 @@ public class BlogViewController {
     public String getArticle(@PathVariable("id") Long id, Model model) {
 
         Article article = blogService.findById(id);
-        model.addAttribute("article", new ArticleViewResponseDto(article));
+        User user = userService.findByEmail(article.getAuthor());
+        String nickname = user.getNickname();
+
+        model.addAttribute("article", new ArticleViewResponseDto(article, nickname));
 
         return "article";
     }
@@ -52,7 +54,9 @@ public class BlogViewController {
             model.addAttribute("article", new ArticleViewResponseDto());
         } else {
             Article article = blogService.findById(id);
-            model.addAttribute("article", new ArticleViewResponseDto(article));
+            User user = userService.findByEmail(article.getAuthor());
+
+            model.addAttribute("article", new ArticleViewResponseDto(article, user.getNickname()));
         }
 
         return "newArticle";

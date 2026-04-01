@@ -15,12 +15,14 @@ public class ArticleViewResponseDto {
     private String content;
     private LocalDateTime createdAt;
     private String author;
+    private String authorNickname;
 
-    public ArticleViewResponseDto(Article article) {
+    public ArticleViewResponseDto(Article article, String nickname) {
         this.id = article.getId();
         this.title = article.getTitle();
         this.content = article.getContent();
         this.createdAt = article.getCreatedAt();
         this.author = article.getAuthor();
+        this.authorNickname = nickname != null ? nickname : article.getAuthor();
     }
 }
