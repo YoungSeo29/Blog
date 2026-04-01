@@ -94,10 +94,6 @@ public class BlogApiController {
         return ResponseEntity.ok(dto);
     }
 
-//    // 닉네임 변경
-//    @PostMapping("/api/user/nickname") {
-//
-//    }
 //
 //    // 프로필 사진 업로드
 //    @PostMapping("/api/user/profile-image") {

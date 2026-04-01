@@ -31,4 +31,11 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow( () -> new IllegalArgumentException("Unexpected user"));
     }
+
+    public void updateNickname(String email, String nickname) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow( () -> new IllegalArgumentException("Unexpected user"));
+        user.update(nickname);
+        userRepository.save(user);
+    }
 }
