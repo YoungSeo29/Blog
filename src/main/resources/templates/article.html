@@ -5,6 +5,15 @@
     <title>블로그 글 목록</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.min.css">
+    <style>
+        section img {
+            max-width: 600px !important;
+            width: 100% !important;
+            height: auto !important;
+            display: block;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
 <div class="p-5 mb-5 text-center</> bg-light>">
@@ -23,7 +32,7 @@
                 </header>
                 <section class="mb-5">
                     <div id="viewer"></div>
-                    <p class="fs-5 mb-4" th:utext="${article.content}"></p>
+                    <p class="fs-5 mb-4 article-content" th:utext="${article.content}"></p>
                 </section>
                 <button type="button" id="modify-btn" th:onclick="|location.href='@{/new-article?id={articleId} (articleId=${article.id})}'|"
                         class="btn btn-primary btn-sm">수정</button>
