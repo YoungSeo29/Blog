@@ -8,11 +8,15 @@ public class ArticleListViewResponseDto {
 
     private final Long id;
     private final String title;
-    private final String content;
+    private String summary;
 
     public ArticleListViewResponseDto(Article article) {
         this.id = article.getId();
         this.title = article.getTitle();
-        this.content = article.getContent();
+        String plainText = article.getContent()
+                .replaceAll("<[^>]*>", "")
+                .replaceAll("data:image[^;]*;base64,[^\"]*", "[이미지]");
+
+        this.summary = plainText.substring(0, Math.min(100, plainText.length())) + "...";
     }
 }

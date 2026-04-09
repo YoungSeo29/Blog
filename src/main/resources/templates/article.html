@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>블로그 글 목록</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.min.css">
 </head>
 <body>
 <div class="p-5 mb-5 text-center</> bg-light>">
@@ -21,7 +22,8 @@
                     <div class="text-muted fst-italic mb-2" th:text="|Posted on ${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')} By ${article.authorNickname}|"></div>
                 </header>
                 <section class="mb-5">
-                    <p class="fs-5 mb-4" th:text="${article.content}"></p>
+                    <div id="viewer"></div>
+                    <p class="fs-5 mb-4" th:utext="${article.content}"></p>
                 </section>
                 <button type="button" id="modify-btn" th:onclick="|location.href='@{/new-article?id={articleId} (articleId=${article.id})}'|"
                         class="btn btn-primary btn-sm">수정</button>
@@ -31,6 +33,8 @@
         </div>
     </div>
 </div>
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.min.css">
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.min.js"></script>
 <script src="/js/article.js"></script>
 </body>
 </html>

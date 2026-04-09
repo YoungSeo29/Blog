@@ -28,7 +28,7 @@ public class Article {
     @Column(name = "author", nullable = false)
     private String author;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, columnDefinition = "LONGTEXT")
     private String content;
 
     @CreatedDate

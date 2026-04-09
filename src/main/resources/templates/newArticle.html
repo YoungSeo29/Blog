@@ -4,6 +4,51 @@
     <meta charset="UTF-8">
     <title>블로그 글 목록</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
+    <style>
+        .container { max-width: 860px; margin: 2rem auto; }
+        #editor { min-height: 500px; }
+        .image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .image-preview-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 0.5px solid #ddd;
+        }
+        .image-preview-item .remove-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 18px;
+            height: 18px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        .image-count {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+    </style>
 </head>
 <body>
 <div class="p-5 mb-5 text-center</> bg-light>">
@@ -19,9 +64,12 @@
                 <header class="mb-4">
                     <input type="text" class="form-control" placeholder="제목" id="title" th:value="${article.title}">
                 </header>
+
                 <section class="mb-5">
-                    <textarea class="form-control h-25" rows="10" placeholder="내용" id="content" th:text="${article.content}"></textarea>
+                    <div id="editor"></div>
+                    <input type="hidden" id="content-hidden" th:value="${article.content}">
                 </section>
+
                 <button th:if="${article.id} != null" type="button" id="modify-btn" class="btn btn-primary btn-sm">수정</button>
                 <button th:if="${article.id} == null" type="button" id="create-btn" class="btn btn-primary btn-sm">등록</button>
             </article>
@@ -29,5 +77,8 @@
     </div>
 </div>
 <script src="/js/article.js"></script>
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script src="/js/article.js"></script>
+<script src="/js/newArticle.js"></script>
 </body>
 </html>
