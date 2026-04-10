@@ -92,4 +92,9 @@ public class BlogViewController {
         return "myPage";
 
     }
+
+    @GetMapping("/coupon")
+    public String coupon() {
+        return "coupon";
+    }
 }
