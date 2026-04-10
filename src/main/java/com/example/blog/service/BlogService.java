@@ -2,11 +2,12 @@ package com.example.blog.service;
 
 import com.example.blog.domain.Article;
 import com.example.blog.dto.AddArticleRequest;
-import com.example.blog.dto.ArticleResponseDto;
 import com.example.blog.dto.UpdateArticleRequestDto;
 import com.example.blog.repository.BlogRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,10 @@ public class BlogService {
 
         authorizeArticleAuthor(article);
         blogRepository.deleteById(id);
+    }
+
+    public Page<Article> findAll(Pageable pageable) {
+        return blogRepository.findAll(pageable);
     }
 
     @Transactional

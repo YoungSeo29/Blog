@@ -7,6 +7,10 @@ import com.example.blog.dto.ArticleViewResponseDto;
 import com.example.blog.service.BlogService;
 import com.example.blog.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,13 +28,19 @@ public class BlogViewController {
     private final UserService userService;
 
     @GetMapping("/articles")
-    public String getArticles(Model model) {
+    public String getArticles(Model model, @RequestParam(defaultValue = "0") int page) {
 
-        List<ArticleListViewResponseDto> articles = blogService.findAll().stream()
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
+        Page<Article> articlePage = blogService.findAll(pageable);
+
+        List<ArticleListViewResponseDto> articles = articlePage.getContent()
+                .stream()
                 .map(ArticleListViewResponseDto::new)
                 .toList();
 
         model.addAttribute("articles", articles);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", articlePage.getTotalPages());
 
         return "articleList";
     }

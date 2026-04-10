@@ -34,6 +34,22 @@
     </div>
     <br>
   </div>
+
+  <nav>
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+        <a class="page-link" th:href="@{/articles(page=${currentPage - 1})}">이전</a>
+      </li>
+      <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+          th:classappend="${i == currentPage} ? 'active'">
+        <a class="page-link" th:href="@{/articles(page=${i})}" th:text="${i + 1}"></a>
+      </li>
+      <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+        <a class="page-link" th:href="@{/articles(page=${currentPage + 1})}">다음</a>
+      </li>
+    </ul>
+  </nav>
+
   <button type="button" class="btn btn-secondary" id="logout-btn">로그아웃</button>
 </div>
 <script src="/js/article.js"></script>
