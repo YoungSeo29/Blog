@@ -72,13 +72,7 @@ const myPageButton = document.getElementById('myPage-btn');
 
 if (myPageButton) {
     myPageButton.addEventListener('click', event => {
-        const token = localStorage.getItem('access_token');
-        if (token) {
-            location.href = '/my-page';
-        } else {
-            alert("로그인이 필요합니다.");
-            location.replace('/login');
-        }
+        location.href = '/my-page';
     });
 }
 

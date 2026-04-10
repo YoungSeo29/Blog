@@ -52,9 +52,15 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             token = getTokenFromCookie(request);  // 쿠키에서만 읽기
         }
 
+        // 임시 로그
+        System.out.println("### URI: " + request.getRequestURI() + " / token: " + (token != null ? "있음" : "없음"));
+
         if(tokenProvider.validToken(token)) {
             Authentication authentication = tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("### 인증 성공: " + authentication.getName());
+        } else {
+            System.out.println("### 인증 실패");
         }
 
         filterChain.doFilter(request, response);

@@ -5,6 +5,8 @@ import com.example.blog.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class CouponService {
@@ -27,6 +29,10 @@ public class CouponService {
                 .userId(userId)
                 .build());
 
+    }
+
+    public List<Coupon> findByUserId(Long userId) {
+        return couponRepository.findByUserId(userId);
     }
 
     public long getRemainingCount() {

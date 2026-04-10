@@ -1,9 +1,11 @@
 package com.example.blog.service;
 
 import com.example.blog.domain.Article;
+import com.example.blog.domain.User;
 import com.example.blog.dto.AddArticleRequest;
 import com.example.blog.dto.UpdateArticleRequestDto;
 import com.example.blog.repository.BlogRepository;
+import com.example.blog.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,9 +20,14 @@ import java.util.List;
 public class BlogService {
 
     private final BlogRepository blogRepository;
+    private final UserRepository userRepository;
 
     public Article save(AddArticleRequest request, String username) {
-        return blogRepository.save(request.toEntity(username));
+
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new IllegalArgumentException("Unexpected User"));
+
+        return blogRepository.save(request.toEntity(username, user.getId()));
     }
 
     public List<Article> findAll() {
@@ -42,6 +49,10 @@ public class BlogService {
 
     public Page<Article> findAll(Pageable pageable) {
         return blogRepository.findAll(pageable);
+    }
+
+    public Page<Article> findByUserId(Long userId, Pageable pageable) {
+        return blogRepository.findByUserId(userId, pageable);
     }
 
     @Transactional

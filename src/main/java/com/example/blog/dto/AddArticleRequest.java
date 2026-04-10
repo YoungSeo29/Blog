@@ -14,11 +14,12 @@ public class AddArticleRequest {
     private String content;
 
     // 생성자 통해서 객체 생성
-    public Article toEntity(String author) {
+    public Article toEntity(String author, Long userId) {
         return Article.builder()
                 .title(title)
                 .content(content)
                 .author(author)
+                .userId(userId)
                 .build();
     }
 }

@@ -1,10 +1,12 @@
 package com.example.blog.controller;
 
 import com.example.blog.domain.Article;
+import com.example.blog.domain.Coupon;
 import com.example.blog.domain.User;
 import com.example.blog.dto.ArticleListViewResponseDto;
 import com.example.blog.dto.ArticleViewResponseDto;
 import com.example.blog.service.BlogService;
+import com.example.blog.service.CouponService;
 import com.example.blog.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ public class BlogViewController {
 
     private final BlogService blogService;
     private final UserService userService;
+    private final CouponService couponService;
 
     @GetMapping("/articles")
     public String getArticles(Model model, @RequestParam(defaultValue = "0") int page) {
@@ -73,21 +76,26 @@ public class BlogViewController {
     }
 
     @GetMapping("/my-page")
-    public String myPage(Principal principal, Model model) {
-
-        System.out.println("viewcontroller");
-
+    public String myPage(Principal principal, Model model, @RequestParam(defaultValue = "0") int page) {
 
         String userName = principal.getName();
-        System.out.println(userName);
-
         User user = userService.findByEmail(userName);
-        model.addAttribute("user", user);
-        // 아래는 임시
-        model.addAttribute("articles", List.of());
-        model.addAttribute("currentPage", 0);
-        model.addAttribute("totalPages", 1);
 
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
+        Page<Article> articlePage = blogService.findByUserId(user.getId(), pageable);
+
+        List<ArticleListViewResponseDto> articles = articlePage.getContent()
+                .stream()
+                .map(ArticleListViewResponseDto::new)
+                .toList();
+
+        List<Coupon> myCoupons = couponService.findByUserId(user.getId());
+
+        model.addAttribute("user", user);
+        model.addAttribute("articles", articles);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", articlePage.getTotalPages());
+        model.addAttribute("myCoupons", myCoupons);
 
         return "myPage";
 

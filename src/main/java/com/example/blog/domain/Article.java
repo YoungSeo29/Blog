@@ -28,6 +28,9 @@ public class Article {
     @Column(name = "author", nullable = false)
     private String author;
 
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
     @Column(name = "content", nullable = false, columnDefinition = "LONGTEXT")
     private String content;
 
@@ -40,8 +43,9 @@ public class Article {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Article(String author, String title, String content) {
+    public Article(String author, Long userId, String title, String content) {
         this.author = author;
+        this.userId = userId;
         this.title = title;
         this.content = content;
     }

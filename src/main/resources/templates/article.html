@@ -32,7 +32,7 @@
                 </header>
                 <section class="mb-5">
                     <div id="viewer"></div>
-                    <p class="fs-5 mb-4 article-content" th:utext="${article.content}"></p>
+<!--                    <p class="fs-5 mb-4 article-content" th:utext="${article.content}"></p>-->
                 </section>
                 <button type="button" id="modify-btn" th:onclick="|location.href='@{/new-article?id={articleId} (articleId=${article.id})}'|"
                         class="btn btn-primary btn-sm">수정</button>
