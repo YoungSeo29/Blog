@@ -84,11 +84,7 @@ if (viewerEl) {
     fetch(`/api/articles/${articleId}`)
         .then(res => res.json())
         .then(data => {
-            new toastui.Editor.factory({
-                el: viewerEl,
-                viewer: true,
-                initialValue: data.content
-            });
+            viewerEl.innerHTML = data.content;
         });
 }
 
