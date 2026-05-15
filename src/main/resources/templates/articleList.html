@@ -35,7 +35,8 @@
       <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
         <a class="page-link" th:href="@{/articles(page=${currentPage - 1})}">이전</a>
       </li>
-      <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+      <li class="page-item"
+          th:each="i : ${#numbers.sequence(startPage, endPage)}"
           th:classappend="${i == currentPage} ? 'active'">
         <a class="page-link" th:href="@{/articles(page=${i})}" th:text="${i + 1}"></a>
       </li>

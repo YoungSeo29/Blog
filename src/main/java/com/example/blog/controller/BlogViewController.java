@@ -41,9 +41,17 @@ public class BlogViewController {
                 .map(ArticleListViewResponseDto::new)
                 .toList();
 
+        int totalPages = articlePage.getTotalPages();
+        int pageBlockSize = 5; // 한 번에 보여줄 페이지 번호 개수
+        int startPage = (page / pageBlockSize) * pageBlockSize; // 현재 블록의 시작 페이지 (0,5,10,15...)
+        int endPage = Math.min(startPage + pageBlockSize - 1, totalPages - 1); // 현재 블록의 끝 페이지, 마지막 페이지 초과 방지
+
+
         model.addAttribute("articles", articles);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", articlePage.getTotalPages());
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
 
         return "articleList";
     }

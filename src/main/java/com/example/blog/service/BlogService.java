@@ -13,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Service
 public class BlogService {
@@ -28,10 +26,6 @@ public class BlogService {
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected User"));
 
         return blogRepository.save(request.toEntity(username, user.getId()));
-    }
-
-    public List<Article> findAll() {
-        return blogRepository.findAll();
     }
 
     public Article findById(Long id) {
