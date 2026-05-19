@@ -34,22 +34,24 @@ public class BlogViewController {
     public String getArticles(Model model, @RequestParam(defaultValue = "0") int page) {
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
-        Page<Article> articlePage = blogService.findAll(pageable);
 
-        List<ArticleListViewResponseDto> articles = articlePage.getContent()
-                .stream()
+        List<Article> content = blogService.findAll(pageable).getContent();
+
+        List<ArticleListViewResponseDto> articles = content.stream()
                 .map(ArticleListViewResponseDto::new)
                 .toList();
 
-        int totalPages = articlePage.getTotalPages();
-        int pageBlockSize = 5; // 한 번에 보여줄 페이지 번호 개수
-        int startPage = (page / pageBlockSize) * pageBlockSize; // 현재 블록의 시작 페이지 (0,5,10,15...)
-        int endPage = Math.min(startPage + pageBlockSize - 1, totalPages - 1); // 현재 블록의 끝 페이지, 마지막 페이지 초과 방지
+        // 수정 : Count는 캐시에서 가져옴
+        long totalCount = blogService.getArticleCount();
+        int totalPages = (int) Math.ceil((double) totalCount / 10);
 
+        int pageBlockSize = 5;
+        int startPage = (page / pageBlockSize) * pageBlockSize;
+        int endPage = Math.min(startPage + pageBlockSize - 1, totalPages - 1);
 
         model.addAttribute("articles", articles);
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", articlePage.getTotalPages());
+        model.addAttribute("totalPages", totalPages);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 

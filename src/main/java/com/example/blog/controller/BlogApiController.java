@@ -9,7 +9,6 @@ import com.example.blog.dto.user.MyInfoDto;
 import com.example.blog.service.BlogService;
 import com.example.blog.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,15 +37,19 @@ public class BlogApiController {
                 .body(savedArticle);
     }
 
+    // 부하 테스트를 위한 함수..
     @GetMapping("/api/articles")
-    public ResponseEntity<Page<ArticleResponseDto>> findAllArticles(@RequestParam(defaultValue="0")int page) {
+    public ResponseEntity<List<ArticleResponseDto>> findAllArticles(
+            @RequestParam(defaultValue = "0") int page) {
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
-        Page<ArticleResponseDto> articles = blogService.findAll(pageable)
-                .map(ArticleResponseDto::new);
+        List<ArticleResponseDto> articles = blogService.findAllSlice(pageable)
+                .getContent()
+                .stream()
+                .map(ArticleResponseDto::new)
+                .toList();
 
         return ResponseEntity.ok().body(articles);
-
     }
 
     @GetMapping("/api/articles/{id}")
