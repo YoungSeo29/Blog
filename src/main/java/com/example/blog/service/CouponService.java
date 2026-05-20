@@ -18,11 +18,11 @@ public class CouponService {
     public void issue(Long userId) {
 
         if(couponRepository.existsByUserId(userId)) {
-            throw new IllegalArgumentException("이미 쿠폰을 받았습니다.");
+            throw new IllegalStateException("이미 쿠폰을 받았습니다.");
         }
 
         if(couponRepository.count() >= MAX_COUPON_COUNT) {
-            throw new IllegalArgumentException("쿠폰이 모두 소진되었습니다.");
+            throw new IllegalStateException("쿠폰이 모두 소진되었습니다.");
         }
 
         couponRepository.save(Coupon.builder()
