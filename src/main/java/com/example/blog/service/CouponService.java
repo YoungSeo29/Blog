@@ -15,7 +15,8 @@ public class CouponService {
 
     private final CouponRepository couponRepository;
 
-    public void issue(Long userId) {
+    // 쿠폰 발급받기 - 한 번에 하나의 스레드만 락 획득, 진입
+    public synchronized void issue(Long userId) {
 
         if(couponRepository.existsByUserId(userId)) {
             throw new IllegalStateException("이미 쿠폰을 받았습니다.");
