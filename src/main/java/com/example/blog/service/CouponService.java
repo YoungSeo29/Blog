@@ -6,6 +6,7 @@ import com.example.blog.repository.CouponPolicyRepository;
 import com.example.blog.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class CouponService {
 
     // 시도1 (Synchronized) - 한 번에 하나의 스레드만 락 획득, 진입 -> 응답시간 늦어짐
     // 시도2 (비관적락) - countWithLock()으로 조회시 select for update 실행. 다른 트랜잭션 대기.
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void issue(Long userId) {
 
         if(couponRepository.existsByUserId(userId)) {
