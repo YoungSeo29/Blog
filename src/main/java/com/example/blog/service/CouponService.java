@@ -27,12 +27,19 @@ public class CouponService {
             System.out.println("이미 쿠폰을 발급받음");
             throw new IllegalStateException("이미 쿠폰을 받았습니다.");
         }
-
+        /*
         CouponPolicy policy = couponPolicyRepository.findByIdWithLock(COUPON_POLICY_ID)
                 .orElseThrow( () -> new IllegalStateException("쿠폰 정책이 존재하지 않습니다."));
 
         // 발급된 쿠폰 수량 증가 +1
         policy.increaseIssuedCount();
+         */
+
+        int updated = couponPolicyRepository.increaseIssuedCoundIfAvailable(COUPON_POLICY_ID);
+
+        if (updated == 0) {
+            throw new IllegalStateException("쿠폰이 모두 소진되었습니다");
+        }
 
         couponRepository.save(Coupon.builder()
                 .userId(userId)
